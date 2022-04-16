@@ -2,17 +2,23 @@ import com.hazelcast.client.HazelcastClient
 import com.hazelcast.client.config.ClientConfig
 import com.hazelcast.core.HazelcastInstance
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
 object HazelcastPlayground extends App {
   val clientConfig: ClientConfig           = ClientConfig.load().setClusterName("scala-playground")
   val hazelcastInstance: HazelcastInstance = HazelcastClient.newHazelcastClient(clientConfig)
 
 //  BaseTest.dataDistributionTest(hazelcastInstance)
 
-  time(ThreadSaveTest.noLock(hazelcastInstance))
-  time(ThreadSaveTest.pessimisticLock(hazelcastInstance))
-  time(ThreadSaveTest.optimisticLock(hazelcastInstance))
+//  time(ThreadSaveTest.noLock(hazelcastInstance))
+//  time(ThreadSaveTest.pessimisticLock(hazelcastInstance))
+//  time(ThreadSaveTest.optimisticLock(hazelcastInstance))
+
+  BoundedQueueTest.startWrite(hazelcastInstance)
+  Thread.sleep(5000)
+  BoundedQueueTest.startRead(hazelcastInstance)
+  BoundedQueueTest.startRead(hazelcastInstance)
+  BoundedQueueTest.clearQueue(hazelcastInstance)
+  println("End of test")
+
 
   def time[T](f: => T): Unit = {
     val start = System.nanoTime()

@@ -1,11 +1,12 @@
 import com.hazelcast.core.HazelcastInstance
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{Await, Future}
 import scala.util.control.Breaks._
 
 object ThreadSaveTest {
-  def noLock(hazelcastInstance: HazelcastInstance)(implicit executionContext: ExecutionContext): Unit = {
+  def noLock(hazelcastInstance: HazelcastInstance): Unit = {
     val task4Locks = hazelcastInstance.getMap[String, Int]("task4")
 
     val keyUnlocked = "okyshkevych"
@@ -22,7 +23,7 @@ object ThreadSaveTest {
     println(task4Locks.get(keyUnlocked))
   }
 
-  def pessimisticLock(hazelcastInstance: HazelcastInstance)(implicit executionContext: ExecutionContext): Unit = {
+  def pessimisticLock(hazelcastInstance: HazelcastInstance): Unit = {
     val task4Locks = hazelcastInstance.getMap[String, Int]("task4")
 
     val keyPessimistic = "grandson"
@@ -42,7 +43,7 @@ object ThreadSaveTest {
     println(task4Locks.get(keyPessimistic))
   }
 
-  def optimisticLock(hazelcastInstance: HazelcastInstance)(implicit executionContext: ExecutionContext): Unit = {
+  def optimisticLock(hazelcastInstance: HazelcastInstance): Unit = {
     val task4Locks = hazelcastInstance.getMap[String, Int]("task4")
 
     val keyOptimistic = "grailknights"
