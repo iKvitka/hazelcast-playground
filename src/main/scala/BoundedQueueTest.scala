@@ -7,7 +7,7 @@ import scala.concurrent.Future
 object BoundedQueueTest {
   val queueName                                              = "task5BoundedQueue"
   def startWrite(hazelcastInstance: HazelcastInstance): Unit = {
-    val boundedQueue: IQueue[Int] = hazelcastInstance.getQueue[Int]("task5BoundedQueue")
+    val boundedQueue: IQueue[Int] = hazelcastInstance.getQueue[Int](queueName)
 
     Future {
       (1 to 100).foreach { i =>
@@ -19,7 +19,7 @@ object BoundedQueueTest {
   }
 
   def startRead(hazelcastInstance: HazelcastInstance): Future[Unit] = {
-    val boundedQueue: IQueue[Int] = hazelcastInstance.getQueue[Int]("task5BoundedQueue")
+    val boundedQueue: IQueue[Int] = hazelcastInstance.getQueue[Int](queueName)
 
     Future {
       (1 to 50).foreach { _ =>
@@ -31,7 +31,7 @@ object BoundedQueueTest {
   }
 
   def clearQueue(hazelcastInstance: HazelcastInstance): Unit = {
-    val boundedQueue: IQueue[Int] = hazelcastInstance.getQueue[Int]("task5BoundedQueue")
+    val boundedQueue: IQueue[Int] = hazelcastInstance.getQueue[Int](queueName)
     while (boundedQueue.size() != 0) boundedQueue.take()
   }
 }
