@@ -1,20 +1,17 @@
 import com.hazelcast.client.HazelcastClient
-import com.hazelcast.client.config.{ClientConfig, ClientNetworkConfig}
-import com.hazelcast.config.Config
+import com.hazelcast.client.config.ClientConfig
+import com.hazelcast.core.HazelcastInstance
+import com.hazelcast.map.IMap
+
+import scala.util.Random
 
 object HazelcastPlayground extends App {
-  val clientConfig: ClientConfig = ClientConfig.load().setClusterName("scala-playground")
-  val hazelcastClient = HazelcastClient.newHazelcastClient(clientConfig)
+  val clientConfig: ClientConfig         = ClientConfig.load().setClusterName("scala-playground")
+  val hazelcastClient: HazelcastInstance = HazelcastClient.newHazelcastClient(clientConfig)
 
-  val map = hazelcastClient.getMap[String, String]("user-cash")
+  val task3map: IMap[Int, String] = hazelcastClient.getMap[Int, String]("task3")
 
-  map.put("user1","test")
-  map.get("user1")
-  map.putIfAbsent("somekey", "somevalue")
-  println(map)
-  println(map.size())
-  map.replace("user1", "test", "newvalue")
-  map.clear()
-  println(map.size())
-  // Shutdown this Hazelcast client
+  (0 to 1000).foreach(key => task3map.put(key, Random.nextString(Random.between(3, 10))))
+
+  println(task3map.size())
 }
